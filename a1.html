@@ -166,7 +166,7 @@
             margin-bottom: 8px;
         }
 
-        select, input[type="date"] {
+        select, input[type="date"], input[type="text"] {
             width: 100%;
             padding: 12px 16px;
             background-color: var(--bg-dark);
@@ -179,7 +179,7 @@
             font-family: inherit;
         }
 
-        select:focus, input[type="date"]:focus {
+        select:focus, input[type="date"]:focus, input[type="text"]:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
         }
@@ -239,6 +239,15 @@
             color: var(--danger);
         }
 
+        /* สำหรับซ่อน/แสดง Section */
+        .section-content {
+            display: none;
+            width: 100%;
+        }
+        .section-content.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .content-wrapper { padding: 15px; justify-content: center; }
@@ -254,11 +263,11 @@
             MyIoT Admin
         </div>
         <ul class="nav-menu">
-            <li class="nav-item active">
+            <li class="nav-item active" id="menu-dashboard">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 แผงควบคุมระบบ
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="menu-user">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 จัดการผู้ใช้งาน
             </li>
@@ -269,7 +278,7 @@
     <div class="main-content">
         <!-- แถบด้านบน (Topbar) -->
         <div class="topbar">
-            <div class="topbar-title">Dashboard / การตั้งค่าสิทธิ์การใช้งาน</div>
+            <div class="topbar-title" id="topbar-title">Dashboard / การตั้งค่าสิทธิ์การใช้งาน</div>
             <div class="admin-profile">
                 <span>Super Admin</span>
                 <div class="avatar">A</div>
@@ -279,65 +288,114 @@
         <!-- พื้นที่แสดงข้อมูล -->
         <div class="content-wrapper">
             
-            <!-- การ์ดตั้งค่าหลัก -->
-            <div class="card">
-                <div class="card-header">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                    ตั้งค่าสถานะและวันหมดอายุ (Blynk)
-                </div>
-
-                <div class="form-group">
-                    <label for="statusSelect">สถานะระบบ (V1)</label>
-                    <select id="statusSelect">
-                        <option value="1">🟢 เปิดใช้งาน (Active)</option>
-                        <option value="0">🔴 ระงับการใช้งาน (Inactive)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="expireDate">วันหมดอายุ (V0)</label>
-                    <input type="date" id="expireDate">
-                    <div class="helper-text">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        ระบบจะแปลงปี ค.ศ. เป็น ปี พ.ศ. (DD-MM-YYYY) อัตโนมัติเมื่อบันทึก
+            <!-- ================= Section: แผงควบคุมระบบ ================= -->
+            <div id="section-dashboard" class="section-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        ตั้งค่าสถานะและวันหมดอายุ (Blynk)
                     </div>
-                </div>
 
-                <button id="saveBtn">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                    บันทึกการตั้งค่า
-                </button>
-                <div class="status-msg" id="msg"></div>
+                    <div class="form-group">
+                        <label for="statusSelect">สถานะระบบ (V1)</label>
+                        <select id="statusSelect">
+                            <option value="1">🟢 เปิดใช้งาน (Active)</option>
+                            <option value="0">🔴 ระงับการใช้งาน (Inactive)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expireDate">วันหมดอายุ (V0)</label>
+                        <input type="date" id="expireDate">
+                        <div class="helper-text">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            ระบบจะแปลงปี ค.ศ. เป็น ปี พ.ศ. (DD-MM-YYYY) อัตโนมัติเมื่อบันทึก
+                        </div>
+                    </div>
+
+                    <button id="saveBtn">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        บันทึกการตั้งค่า
+                    </button>
+                    <div class="status-msg" id="msgDashboard"></div>
+                </div>
             </div>
-            
+
+            <!-- ================= Section: จัดการผู้ใช้งาน ================= -->
+            <div id="section-user" class="section-content">
+                <div class="card">
+                    <div class="card-header">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        บัญชีผู้ใช้งานระบบ (User 1)
+                    </div>
+
+                    <div class="form-group">
+                        <label for="usernameInput">ชื่อผู้ใช้งาน Username (V3)</label>
+                        <input type="text" id="usernameInput" placeholder="กำลังโหลด...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passwordInput">รหัสผ่าน Password (V4)</label>
+                        <input type="text" id="passwordInput" placeholder="กำลังโหลด...">
+                    </div>
+
+                    <button id="saveUserBtn">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        อัปเดตบัญชีผู้ใช้งาน
+                    </button>
+                    <div class="status-msg" id="msgUser"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
         const TOKEN = "mv0IHbbPrtMdJHzR2vnlAdijTjZHnWms";
 
-        // แสดงข้อความสถานะ
-        function showMessage(text, isError = false) {
-            const msg = document.getElementById('msg');
+        // ================= ควบคุมการสลับเมนู (Tabs) =================
+        const menuDashboard = document.getElementById('menu-dashboard');
+        const menuUser = document.getElementById('menu-user');
+        const sectionDashboard = document.getElementById('section-dashboard');
+        const sectionUser = document.getElementById('section-user');
+        const topbarTitle = document.getElementById('topbar-title');
+
+        menuDashboard.addEventListener('click', () => {
+            menuDashboard.classList.add('active');
+            menuUser.classList.remove('active');
+            sectionDashboard.classList.add('active');
+            sectionUser.classList.remove('active');
+            topbarTitle.innerText = "Dashboard / การตั้งค่าสิทธิ์การใช้งาน";
+        });
+
+        menuUser.addEventListener('click', () => {
+            menuUser.classList.add('active');
+            menuDashboard.classList.remove('active');
+            sectionUser.classList.add('active');
+            sectionDashboard.classList.remove('active');
+            topbarTitle.innerText = "Dashboard / จัดการผู้ใช้งาน";
+        });
+
+        // ================= ฟังก์ชันแสดงข้อความ =================
+        function showMessage(elementId, text, isError = false) {
+            const msg = document.getElementById(elementId);
             msg.innerText = text;
             msg.className = isError ? "status-msg show error" : "status-msg show";
             setTimeout(() => { msg.classList.remove('show'); }, 3000);
         }
 
-        // โหลดข้อมูลปัจจุบันจาก Blynk
+        // ================= โหลดข้อมูลทั้งหมดเมื่อเปิดเว็บ =================
         async function loadCurrentData() {
             try {
-                // โหลดสถานะ V1
+                // 1. โหลดข้อมูล Dashboard (V0, V1)
                 const resV1 = await fetch(`https://sgp1.blynk.cloud/external/api/get?token=${TOKEN}&V1`);
                 let status = await resV1.text();
                 document.getElementById('statusSelect').value = status.replace(/[^0-9]/g, '') || "1";
 
-                // โหลดวันหมดอายุ V0
                 const resV0 = await fetch(`https://sgp1.blynk.cloud/external/api/get?token=${TOKEN}&V0`);
                 let dateString = await resV0.text();
                 dateString = dateString.replace(/[\[\]"]/g, ''); 
                 
-                // แปลง DD-MM-YYYY (พ.ศ.) เป็น YYYY-MM-DD (ค.ศ.)
                 const parts = dateString.split('-');
                 if(parts.length === 3) {
                     const day = parts[0];
@@ -345,13 +403,24 @@
                     const yearCE = parseInt(parts[2]) - 543;
                     document.getElementById('expireDate').value = `${yearCE}-${month}-${day}`;
                 }
+
+                // 2. โหลดข้อมูล User (V3, V4)
+                const resV3 = await fetch(`https://sgp1.blynk.cloud/external/api/get?token=${TOKEN}&V3`);
+                let username = await resV3.text();
+                document.getElementById('usernameInput').value = username.replace(/[\[\]"]/g, '');
+
+                const resV4 = await fetch(`https://sgp1.blynk.cloud/external/api/get?token=${TOKEN}&V4`);
+                let password = await resV4.text();
+                document.getElementById('passwordInput').value = password.replace(/[\[\]"]/g, '');
+
             } catch (err) {
                 console.error("โหลดข้อมูลล้มเหลว", err);
-                showMessage("โหลดข้อมูลจากเซิร์ฟเวอร์ล้มเหลว", true);
+                showMessage("msgDashboard", "โหลดข้อมูลล้มเหลว", true);
+                showMessage("msgUser", "โหลดข้อมูลล้มเหลว", true);
             }
         }
 
-        // บันทึกข้อมูลขึ้น Blynk
+        // ================= บันทึกข้อมูล Dashboard (V0, V1) =================
         document.getElementById('saveBtn').addEventListener('click', async () => {
             const btn = document.getElementById('saveBtn');
             const originalBtnHTML = btn.innerHTML;
@@ -363,30 +432,56 @@
             const dateVal = document.getElementById('expireDate').value; 
             
             if(!dateVal) {
-                showMessage("กรุณาเลือกวันหมดอายุ", true);
+                showMessage("msgDashboard", "กรุณาเลือกวันหมดอายุ", true);
                 btn.innerHTML = originalBtnHTML;
                 btn.style.pointerEvents = 'auto';
                 return;
             }
 
-            // แปลง YYYY-MM-DD (ค.ศ.) เป็น DD-MM-YYYY (พ.ศ.)
             const [yearCE, month, day] = dateVal.split('-');
             const yearBE = parseInt(yearCE) + 543;
             const blynkDate = `${day}-${month}-${yearBE}`;
 
             try {
-                // อัปเดต V0 และ V1
                 await fetch(`https://sgp1.blynk.cloud/external/api/update?token=${TOKEN}&V0=${blynkDate}&V1=${status}`);
-                showMessage(`บันทึกสำเร็จ! (สถานะ: ${status === "1" ? "เปิดใช้งาน" : "ระงับ"}, หมดอายุ: ${blynkDate})`);
+                showMessage("msgDashboard", `บันทึกสำเร็จ! (สถานะ: ${status === "1" ? "เปิดใช้งาน" : "ระงับ"}, หมดอายุ: ${blynkDate})`);
             } catch (err) {
-                showMessage("เกิดข้อผิดพลาดในการบันทึก", true);
+                showMessage("msgDashboard", "เกิดข้อผิดพลาดในการบันทึก", true);
             }
             
             btn.innerHTML = originalBtnHTML;
             btn.style.pointerEvents = 'auto';
         });
 
-        // เรียกใช้ฟังก์ชันตอนโหลดหน้าเว็บ
+        // ================= บันทึกข้อมูล User (V3, V4) =================
+        document.getElementById('saveUserBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('saveUserBtn');
+            const originalBtnHTML = btn.innerHTML;
+            
+            btn.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> กำลังอัปเดต...`;
+            btn.style.pointerEvents = 'none';
+
+            const username = document.getElementById('usernameInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            try {
+                // แปลงข้อมูลเป็น URL Encoding เพื่อรองรับตัวอักษรพิเศษต่างๆ
+                const encodedUsername = encodeURIComponent(username);
+                const encodedPassword = encodeURIComponent(password);
+
+                await fetch(`https://sgp1.blynk.cloud/external/api/update?token=${TOKEN}&V3=${encodedUsername}`);
+                await fetch(`https://sgp1.blynk.cloud/external/api/update?token=${TOKEN}&V4=${encodedPassword}`);
+                
+                showMessage("msgUser", `อัปเดตบัญชีผู้ใช้งานสำเร็จ!`);
+            } catch (err) {
+                showMessage("msgUser", "เกิดข้อผิดพลาดในการอัปเดต", true);
+            }
+            
+            btn.innerHTML = originalBtnHTML;
+            btn.style.pointerEvents = 'auto';
+        });
+
+        // เริ่มโหลดข้อมูลทันที
         loadCurrentData();
     </script>
 </body>
