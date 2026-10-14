@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Autofill System",
+  "version": "1.0",
+  "description": "Extension สำหรับกรอกข้อมูลพร้อมกันผ่าน Firebase",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"], 
+      "js": ["content.js"]
+    }
+  ]
+}
